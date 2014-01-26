@@ -1,0 +1,144 @@
+#!/usr/bin/python
+
+import logging
+import sys
+import subprocess
+import sqlite3
+import getpass
+import time
+import os, errno
+import string
+import re
+
+def main():
+	
+	#Psuedo-defines
+	MONITOR_SLEEP_SECONDS = 20
+	
+	#Setup logging to console.
+	logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s:%(message)s',level=logging.DEBUG)
+	logging.info('Starting...')
+	
+	#Make <user>/run/db if not there.
+	dbFilePath = "/home/" + getpass.getuser() + "/run/db"
+	logging.debug("checking dir " + dbFilePath)
+	mkdir_p(dbFilePath)
+	
+	#SQLite3 Init stuff here.
+	dbLocation = dbFilePath + "/rpi.db"
+	tableName = "rpi_data"
+
+	try:
+		db = sqlite3.connect(dbLocation)
+		cursor = db.cursor()
+		cursor.execute('''
+			CREATE TABLE IF NOT EXISTS rpi_data(_id INTEGER PRIMARY KEY,
+				timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				rpi_id TEXT,
+				soc_temp TEXT,
+				soc_corevoltage TEXT)
+		''')
+		db.commit()
+	except Exception as e:
+		db.rollback()	#attempt to undo changes if something goes wrong
+		logging.warning("Error in db create " + e.args[0])
+	finally:
+		#Close db.
+		db.close()
+		
+	#Main monitor loop.
+	while True:
+	
+		try:
+			rpiSocTempReturnString = None
+			rpiSocVoltCoreReturnString = None
+			
+			#Get Raspberry Pi SoC temperature and core voltage.
+			try:
+				rpiSocTempReturnString = subprocess.check_output(["/opt/vc/bin/vcgencmd","measure_temp"])
+				rpiSocVoltCoreReturnString = subprocess.check_output(["/opt/vc/bin/vcgencmd","measure_volts","core"])
+			except KeyboardInterrupt:
+				print ("System Exit")
+				break
+			except:
+				#TODO Log the error (need logging mechanism)
+				pass
+			
+			if rpiSocTempReturnString is not None:
+				logging.debug("rpi temp raw string: " + str(rpiSocTempReturnString))
+			else:
+				logging.info("no rpi temp raw string")
+
+			if rpiSocVoltCoreReturnString is not None:
+				logging.debug("rpi core voltage string: " + str(rpiSocVoltCoreReturnString))
+			else:
+				logging.info("no rpi core voltage string")
+				
+			if rpiSocTempReturnString is not None and rpiSocVoltCoreReturnString is not None:
+				#Add data to database
+				
+				soc_temp_val = ValFromRpiString(str(rpiSocTempReturnString))
+				soc_corevoltage_val = ValFromRpiString(str(rpiSocVoltCoreReturnString))				
+				
+				time_stamp = str(int(time.time()))
+				rpi_id = "1"
+				logging.debug("Adding " + time_stamp + " " + rpi_id + "  " + soc_temp_val + " " + soc_corevoltage_val)
+				
+				#Open DB, insert data, and close DB.
+				try:
+					db = sqlite3.connect(dbLocation)
+					cursor = db.cursor()
+					cursor.execute('''INSERT INTO rpi_data(timestamp,rpi_id,soc_temp,soc_corevoltage)
+									VALUES(?,?,?,?)''', (time_stamp, rpi_id, soc_temp_val, soc_corevoltage_val))
+					db.commit()
+				except Exception as e:
+					db.rollback()	#attempt to undo changes if something goes wrong
+					logging.warning("Error in db commit " + e.args[0])
+				finally:
+					db.close()
+			
+			#Sleep before next reading
+			try:
+				time.sleep(MONITOR_SLEEP_SECONDS)
+			except (KeyboardInterrupt, SystemExit):
+				print ("System Exit")
+				break
+				
+		except(KeyboardInterrupt, SystemExit):
+			print ("System Exit")
+			raise
+
+def ValFromRpiString(in_string):
+	'''
+	From list of keywords, find 'keyword=[<int>|<float>]'
+	'''
+	
+	keywords = ["temp=", "volt="]
+	
+	for word in keywords:
+	
+		#Look for the keyword.
+		f_index = in_string.find(word)
+		if f_index >= 0:
+			#Match integers and floats, but must at least have an integer.
+			match = re.search('^-?([0-9]*\.[0-9]+|[0-9]+)', in_string[(f_index+len("temp=")):])
+			if match:
+				return str(match.group(0))
+			break
+	
+	#If no values were found given the keywords above, return None.
+	return None
+	
+def mkdir_p(filepath):
+	try:
+		os.makedirs(filepath)
+	except OSError as err:
+		if err.errno == errno.EEXIST and os.path.isdir(filepath):
+			#The -p part, don't worry if it already exists.
+			pass
+		else:
+			#Some other issue, so don't disregard it.
+			raise
+
+if __name__ == "__main__":
+	main()
