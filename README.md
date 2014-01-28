@@ -1,12 +1,12 @@
 ![Alt](https://raw.github.com/nthmain/hobbled-tone/master/images/hobbled-tone.png)
-
-## Hobbled-Tone Project for NewToneHome
+![Alt](https://raw.github.com/nthmain/hobbled-tone/master/images/newtonehome.png)
+##Hobbled-Tone Project for NewToneHome
 
 This repository contains the source code for the NewToneHome project,
 which consists of scrips designed for the Raspberry Pi (running Arch Linux Arm),
 an Android app for home monitoring, and instructions for installation.
 
-### License
+###License
 [MIT License](http://opensource.org/licenses/MIT)
 
 ### Goal of Project
@@ -15,12 +15,12 @@ and interfaced with the existing hardware. The software will be developed
 iteratively, building on a function base that will hopefully be established soon.
 This Rev. 0 development is aptly named, Hobble-Tone!
 
-## Status of Project
+###Status of Project
 This project is currently in very early development stages. Instructions
 and source code will be heavily modified and added to as the project
 evolves.
 
-##Contributing
+###Contributing
 As stated earlier, it will be difficult to contribute until a more stable
 code base is reached. Any contributions are greatly appreciated and welcomed.
 =================
