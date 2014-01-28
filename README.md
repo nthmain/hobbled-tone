@@ -21,12 +21,12 @@ and source code will be heavily modified and added to as the project
 evolves.
 
 ###Contributing
-As stated earlier, it will be difficult to contribute until a more stable
-code base is reached. Any contributions are greatly appreciated and welcomed.
-=================
+As stated earlier, it will be difficult to contribute until a more stable code base is reached.
+Any contributions are greatly appreciated and welcomed.
+
 
 ###Project Overview
-----------------
+
 I have a 60's vintage Newtone Intercom System. The main unit is where I am currently
 focussed, a large box on the wall in the kitchen with plenty of room for a Raspberry Pi,
 small display, and hardware interfaces to the existing vintage switches and knobs.
@@ -86,3 +86,8 @@ a typical Rev. 0 hardware layout is planned to look like.
         +--------------------+
 
 
+Raspberry Pi Setup
+------------------
+I opted to install a Raspberry Pi build of Arch Linux ARM for this project.
+Instructions will be added soon to get from a minimal Arch install to
+what is needed for monitoring, providing a server, and a lightweight display.
