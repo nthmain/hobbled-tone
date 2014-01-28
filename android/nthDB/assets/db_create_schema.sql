@@ -1,0 +1,9 @@
+CREATE TABLE data
+(
+	_id	INTEGER PRIMARY KEY AUTOINCREMENT,
+	time_stamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	sys_id TEXT NOT NULL,
+	sys_status TEXT,
+	rpi_temp TEXT,
+	rpi_volt TEXT
+);
