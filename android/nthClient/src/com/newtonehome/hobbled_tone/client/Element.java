@@ -1,6 +1,4 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-<!-- 
+/*
 Copyright (c) 2014 Douglas Long
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,12 +18,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
--->
+*/
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+package com.newtonehome.hobbled_tone.client;
 
-</menu>
+public class Element {
+
+	private final Integer imageId;
+	private final String statusTitle;
+	private final String detailTitle;
+	private final String description;
+	
+	public Element(Integer mImageId, String mStatusTitle, String mDetailTitle, String mDescription) {
+		imageId = mImageId;
+		statusTitle = mStatusTitle;
+		detailTitle = mDetailTitle;
+		description = mDescription;
+	}
+	
+	public Integer getImageId() {
+		return imageId;
+	}
+	
+	public String getStatusTitle() {
+		return statusTitle;
+	}
+	
+	public String getDetailTitle() {
+		return detailTitle;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+}

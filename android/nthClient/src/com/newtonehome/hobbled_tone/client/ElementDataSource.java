@@ -1,6 +1,4 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-<!-- 
+/*
 Copyright (c) 2014 Douglas Long
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,12 +18,27 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
--->
+*/
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+package com.newtonehome.hobbled_tone.client;
 
-</menu>
+import java.util.ArrayList;
+import java.util.List;
+
+public class ElementDataSource {
+
+	private final List<Element> elements = new ArrayList<Element>();
+	
+	public ElementDataSource() {
+		//Add system status
+		elements.add(new Element(android.R.drawable.ic_menu_mylocation, "System Status", null, "NTH System Status"));
+		
+		//Add Rpi temp status
+		elements.add(new Element(android.R.drawable.ic_menu_info_details, null, "Pi SoC Temp", "Raspberry Pi Core Temp"));
+		elements.add(new Element(android.R.drawable.ic_menu_info_details, null, "Pu SoC Votlage", "Raspberry Pi Core Voltage"));
+	}
+	
+	public List<Element> getElements() {
+		return elements;
+	}
+}

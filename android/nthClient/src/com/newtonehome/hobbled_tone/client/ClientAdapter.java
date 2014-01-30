@@ -1,6 +1,4 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-<!-- 
+/*
 Copyright (c) 2014 Douglas Long
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,12 +18,39 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
--->
+*/
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+package com.newtonehome.hobbled_tone.client;
 
-</menu>
+import android.content.Context;
+import android.database.Cursor;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SimpleCursorAdapter;
+
+public class ClientAdapter extends SimpleCursorAdapter {
+
+	private int layout;
+	private LayoutInflater inflater;
+	
+	public ClientAdapter(Context context, int layout, Cursor c, String[] from, int[] to, int flags) {
+		super(context, layout, c, from, to, flags);
+		
+		this.layout = layout;
+		this.inflater = LayoutInflater.from(context);
+	}
+	
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+		return inflater.inflate(layout, null);
+	}
+	
+	@Override
+	public void bindView(View view, Context context, Cursor cursor) {
+		super.bindView(view, context, cursor);
+	
+		//Update Label 'LastUpdateTime' for 
+		
+	}
+}

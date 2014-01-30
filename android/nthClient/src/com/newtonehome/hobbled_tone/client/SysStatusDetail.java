@@ -1,6 +1,4 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-<!-- 
+/*
 Copyright (c) 2014 Douglas Long
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,12 +18,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
--->
+*/
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+package com.newtonehome.hobbled_tone.client;
 
-</menu>
+import com.newtonehome.hobbled_tone.nthclient.R;
+import android.app.Activity;
+import android.os.Bundle;
+
+/*
+ * This activity will display a graph showing the system status over time.
+ * Also display last updated timestamp, and display warning if timestamp older than X minutes.
+ */
+public class SysStatusDetail extends Activity {
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_sysstatusdetail);
+	}
+}
