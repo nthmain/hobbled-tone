@@ -53,6 +53,9 @@ public class HobbledUpdater extends Service {
 
 			@Override
 			public void run() {
+				
+				//TODO make sure activity still running before continuing?
+				
 				new DataPoller().execute();
 			}
 		}, 0, 15000);	//Run the task every 15 seconds.

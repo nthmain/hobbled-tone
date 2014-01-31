@@ -31,7 +31,7 @@
         
         <provider
             android:name="com.newtonehome.hobbled_tone.db.DbContentProvider"
-        	android:authorities="com.newtonehome.hobbled_tone.db.DbContentProviderAuth"
+        	android:authorities="com.newtonehome.hobbled_tone.db.contentprovider"
     		android:exported="false" >
         </provider>
         

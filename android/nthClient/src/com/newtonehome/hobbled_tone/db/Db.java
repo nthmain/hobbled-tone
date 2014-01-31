@@ -38,9 +38,9 @@ public class Db {
 	public static final String DB_NAME = "local.db";
 	public static final int DB_VER = 1;
 	public static final String DATA_TABLE = "data";
-	public static final String BASE_URI_NAME = "content://com.hobbled_tone.nthdb.DbContentProvider/";
+	public static final String AUTHORITY = "com.newtonehome.hobbled_tone.db.contentprovider";
 	
-	public static final Uri DATA_URI = Uri.parse(BASE_URI_NAME + DATA_TABLE);
+	public static final Uri DATA_URI = Uri.parse("content://" + AUTHORITY + "/" + DATA_TABLE);
 	
 	//DB Fields (must mach the Database creation schema!)
 	public static final String _ID = "_id";

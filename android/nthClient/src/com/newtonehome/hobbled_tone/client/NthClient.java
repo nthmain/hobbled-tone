@@ -24,6 +24,7 @@ package com.newtonehome.hobbled_tone.client;
 
 import com.newtonehome.hobbled_tone.nthclient.R;
 import com.newtonehome.hobbled_tone.db.Db;
+import com.newtonehome.hobbled_tone.db.DbHelper;
 import com.newtonehome.hobbled_tone.service.HobbledUpdater;
 
 import android.os.Bundle;
@@ -59,6 +60,10 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        //Make a call to the database helper here to create the database if necessary.
+        DbHelper helper = new DbHelper(getApplicationContext());
+        helper.getWritableDatabase();
+        
         //
         //String[] values = new String[] { "Item 1", "Item 2" };
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.list_element_adapter, R.id.listTitle, values);
@@ -87,6 +92,8 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     public void onStart() {
     	super.onStart();
     	
+    	Log.d(TAG,"onStart, starting service...");
+    	
     	//Start service to update database.
     	if (serviceIntent != null) {
     		startService(serviceIntent);
@@ -96,6 +103,8 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     @Override
     public void onResume() {
     	super.onResume();
+    	
+    	Log.d(TAG,"onResume, listening for updates");
     	
     	//Listen for updates.
     	lm.restartLoader(LOADER_ID, null, mCallbacks);
@@ -122,6 +131,9 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     
     @Override
     public void onPause() {
+    	
+    	Log.d(TAG,"onPause, unregistering for updates");
+    	
     	//Stop listening for updates.
     	getContentResolver().unregisterContentObserver(contentObserver);
     	
@@ -131,6 +143,8 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     @Override
     public void onStop() {
     	super.onStop();
+    	
+    	Log.d(TAG,"onStop, stopping service");
     	
     	//Stop service is it's running.
     	if (serviceIntent != null) {

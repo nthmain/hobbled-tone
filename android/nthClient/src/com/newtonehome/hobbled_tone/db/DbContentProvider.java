@@ -28,12 +28,22 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 public class DbContentProvider extends ContentProvider {
 
 	private static final String TAG = "DbContentProvider";
 	
-	SQLiteDatabase db;	//Where contentProvider 'magic' work is done.
+	//DbHelper is the only way to get to the database.
+	private DbHelper helper;
+		
+	@Override
+	public boolean onCreate()
+	{
+		Log.d(TAG,"onCreate, initializing DbHelper");
+		helper = new DbHelper(getContext());
+		return true;
+	}
 	
 	//Uri matching (usefulness more evident when multiple tables exist)
 	private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -45,6 +55,8 @@ public class DbContentProvider extends ContentProvider {
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int rval = 0;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		//Match Uri in order to perform the correct database operation.
 		int matchNum = uriMatcher.match(uri);
@@ -78,6 +90,10 @@ public class DbContentProvider extends ContentProvider {
 
 		long inId = 0;
 		
+		Log.d(TAG,"inserting, getting writeable database");
+		SQLiteDatabase db = helper.getWritableDatabase();
+		Log.d(TAG,"got database");
+		
 		//Match Uri in order to perform the correct database operation.
 		int matchNum = uriMatcher.match(uri);
 		
@@ -98,18 +114,11 @@ public class DbContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public boolean onCreate() {
-
-		DbHelper helper = new DbHelper(getContext());
-		db = helper.getWritableDatabase();
-		
-		return true;
-	}
-
-	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 
+		SQLiteDatabase db = helper.getWritableDatabase();
+		
 		int matchNum = uriMatcher.match(uri);
 		switch (matchNum) {
 		case Db.DATA_URI_MATCH:
@@ -130,6 +139,8 @@ public class DbContentProvider extends ContentProvider {
 			String[] selectionArgs) {
 
 		int rval = 0;
+		
+		SQLiteDatabase db = helper.getWritableDatabase();
 		
 		int matchNum = uriMatcher.match(uri);
 		switch (matchNum) {
