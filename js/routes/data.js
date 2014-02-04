@@ -3,10 +3,12 @@ exports.sysStatus = function(req, res) {
 	
 	//If timestamp is 0, return only current status.
 	if ( timestamp == 0 ) {
-		console.log("Returning current system status");
+		//Return current status w/ current timestamp
+		var now = new Date();
+		timestamp = Math.floor(now.getTime() / 1000);
 	}
 	
-	res.send([{timestamp:'timestamp',sysId:'1',sysStat:'green'}]);
+	res.send([{timestamp:timestamp,sysId:'1',sysStat:'green'}]);
 };
 
 exports.rpiTemp = function(req, res) {

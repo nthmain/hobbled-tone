@@ -50,6 +50,7 @@ public class DbContentProvider extends ContentProvider {
 	static {
 		uriMatcher.addURI(Db.DATA_URI.getAuthority(), "data", Db.DATA_URI_MATCH);
 		uriMatcher.addURI(Db.DATA_URI.getAuthority(), "data/#", Db.DATA_ID_URI_MATCH);
+		uriMatcher.addURI(Db.DATA_URI.getAuthority(), "data/client", Db.CLIENT_URI_MATCH);
 	}
 	
 	@Override
@@ -90,9 +91,7 @@ public class DbContentProvider extends ContentProvider {
 
 		long inId = 0;
 		
-		Log.d(TAG,"inserting, getting writeable database");
 		SQLiteDatabase db = helper.getWritableDatabase();
-		Log.d(TAG,"got database");
 		
 		//Match Uri in order to perform the correct database operation.
 		int matchNum = uriMatcher.match(uri);
@@ -119,14 +118,33 @@ public class DbContentProvider extends ContentProvider {
 
 		SQLiteDatabase db = helper.getWritableDatabase();
 		
+		Cursor cursor;
+		
+		Log.d(TAG,"query");
+		
 		int matchNum = uriMatcher.match(uri);
 		switch (matchNum) {
 		case Db.DATA_URI_MATCH:
-			return db.query(Db.DATA_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
-			//no break (unreachable)
+			
+			cursor = db.query(Db.DATA_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+			cursor.setNotificationUri(getContext().getContentResolver(), uri);
+			return cursor;
+			
 		case Db.DATA_ID_URI_MATCH:
-			return db.query(Db.DATA_TABLE, projection, Db._ID + " = ?", new String[] {uri.getLastPathSegment()}, null, null, sortOrder);
-			//no break (unreachable)
+			
+			cursor = db.query(Db.DATA_TABLE, projection, Db._ID + " = ?", new String[] {uri.getLastPathSegment()}, null, null, sortOrder);
+			cursor.setNotificationUri(getContext().getContentResolver(), uri);
+			return cursor;
+			
+		case Db.CLIENT_URI_MATCH:
+
+			//Return first set of each 'system' type.
+				//TODO implement this (for now just return most recent system status)
+			
+			cursor = db.rawQuery("SELECT _id, max(time_stamp) time_stamp, sys_id, sys_status, rpi_temp, rpi_volt from data", null);
+			cursor.setNotificationUri(getContext().getContentResolver(), uri);
+			return cursor;
+			
 		default:
 			break;
 		}

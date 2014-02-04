@@ -22,8 +22,11 @@ THE SOFTWARE.
 
 package com.newtonehome.hobbled_tone.client;
 
+import com.newtonehome.hobbled_tone.db.Db;
+
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,8 @@ import android.widget.SimpleCursorAdapter;
 
 public class ClientAdapter extends SimpleCursorAdapter {
 
+	private static final String TAG = "ClientAdapter";
+	
 	private int layout;
 	private LayoutInflater inflater;
 	
@@ -50,7 +55,9 @@ public class ClientAdapter extends SimpleCursorAdapter {
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
 	
-		//Update Label 'LastUpdateTime' for 
+		//Update Title label (w/ timestamp for now)
+		String titleLabel = cursor.getString(cursor.getColumnIndex(Db.TIMESTAMP));
 		
+		Log.d(TAG,"latest timestamp is " + titleLabel);
 	}
 }

@@ -32,7 +32,7 @@ import android.net.Uri;
  */
 public class Db {
 
-	private static final String TAG = "Db";
+//	private static final String TAG = "Db";
 	
 	//Database constants.
 	public static final String DB_NAME = "local.db";
@@ -41,6 +41,7 @@ public class Db {
 	public static final String AUTHORITY = "com.newtonehome.hobbled_tone.db.contentprovider";
 	
 	public static final Uri DATA_URI = Uri.parse("content://" + AUTHORITY + "/" + DATA_TABLE);
+	public static final Uri CLIENT_URI = Uri.parse("content://" + AUTHORITY + "/" + "data/client");
 	
 	//DB Fields (must mach the Database creation schema!)
 	public static final String _ID = "_id";
@@ -58,5 +59,6 @@ public class Db {
 	//Uri matches.
 	public static final int DATA_URI_MATCH = 1;
 	public static final int DATA_ID_URI_MATCH = 2;
+	public static final int CLIENT_URI_MATCH = 3;
 
 }

@@ -22,37 +22,62 @@ THE SOFTWARE.
 */
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="vertical"
+    android:paddingBottom="6dp" >
     
-    <ImageView
-        android:id="@+id/image"
-        android:layout_height="100dp"
-        android:contentDescription="@string/icon_description"
-        android:layout_width="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true" />
+    <!-- Layout subsection for icon and title -->
     
-    <TextView
-        android:id="@+id/title"
-        android:textSize="20sp"
-        android:layout_height="80dp"
-        android:layout_width="fill_parent"
-        android:singleLine="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/image" />
-    
-    <TextView
-        android:id="@+id/description"
-        android:textSize="12sp"
-        android:layout_height="20dp"
-        android:singleLine="true"
-        android:layout_width="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-		android:layout_toRightOf="@id/image" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        
+	    <TextView
+	        android:id="@+id/labelTitle"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="10dp"
+	        android:text="@string/labelTitle"
+	        android:textSize="24sp" >
+	    </TextView>
 
-</RelativeLayout>
+	    <TextView
+	        android:id="@+id/labelTimeStamp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/labelTimestamp"
+	        android:gravity="right"
+	        android:textSize="18sp" />
+	    
+    </LinearLayout>
+    
+    <!-- Layout for Detail information -->
+
+	<RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >
+	    
+	    <ImageView
+	        android:id="@+id/iconStatus"
+	        android:src="@drawable/ic_launcher"
+	        android:layout_width="30dp"
+	        android:layout_height="30dp"
+	        android:layout_marginLeft="25dp"
+	        android:contentDescription="@string/icon_description" >
+	    </ImageView>
+	    
+	    <TextView
+	   		android:id="@+id/labelDescription"
+	   		android:layout_toRightOf="@+id/iconStatus"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="5dp"
+	        android:text="@string/listDescriptionString"
+	        android:textSize="22sp" >
+	    </TextView>   
+	    
+	</RelativeLayout>
+
+</LinearLayout>

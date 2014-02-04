@@ -107,7 +107,7 @@ public class HobbledUpdater extends Service {
 
 			HttpContext localContext = new BasicHttpContext();
 			HttpClient client = new DefaultHttpClient();  
-			HttpGet get = new HttpGet("http://192.168.1.100:3000/sys_stat/1"); 
+			HttpGet get = new HttpGet("http://192.168.1.100:3000/sys_stat/0"); 
 			
 			try {
 				HttpResponse response = client.execute(get, localContext);
@@ -129,7 +129,7 @@ public class HobbledUpdater extends Service {
 				if (resultsArray.length() >= 1) {
 					
 					JSONObject obj = resultsArray.getJSONObject(0);
-					
+										
 					String timestamp = obj.getString(TAG_TIMESTAMP);
 					String sys_stat = obj.getString(TAG_SYSTEMSTATUS);
 					String sys_id = obj.getString(TAG_SYSTEMID);
@@ -141,9 +141,8 @@ public class HobbledUpdater extends Service {
 					contentValues.put(Db.TIMESTAMP, timestamp);
 					contentValues.put(Db.SYS_ID, sys_id);
 					contentValues.put(Db.SYS_STATUS, sys_stat);
-					
+										
 					getContentResolver().insert(Db.DATA_URI, contentValues);
-					
 				}
 				
  			} catch (Exception e) {

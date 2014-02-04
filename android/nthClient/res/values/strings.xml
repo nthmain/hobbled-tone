@@ -34,4 +34,8 @@ THE SOFTWARE.
 	<string name="textViewLastUpdated">Last Updated:</string>
 	<string name="app_name_sysstatusdetail">System Detail</string>
 	
+	<string name="labelTitle">Title</string>
+	<string name="labelTimestamp">TimeStamp</string>
+	<string name="no_items">Nothing</string>
+	
 </resources>

@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -42,17 +43,17 @@ import android.database.Cursor;
 import android.app.LoaderManager;
 
 /*
- * 
+ * NthClient is the top level app for this package. It consists of a top 'action' bar that displays any pertinent system info,
+ * 	followed by a listactivity that shows what is being monitored.
  */
 public class NthClient extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final String TAG = "NthClient";
-	
-	public ContentObserver contentObserver;
-	private ClientAdapter adapter;
-	private static final int LOADER_ID = 1;
+			
 	private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
 	private LoaderManager lm;
+	private NthClientCursorAdapter adapter;
+	private static final int LOADER_ID = 0;
 	
 	Intent serviceIntent;
 	
@@ -64,25 +65,23 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
         DbHelper helper = new DbHelper(getApplicationContext());
         helper.getWritableDatabase();
         
-        //
         //String[] values = new String[] { "Item 1", "Item 2" };
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.list_element_adapter, R.id.listTitle, values);
         //setListAdapter(new NthAdapter(getApplicationContext(), new ElementDataSource().getElements()));
         
         Log.d(TAG,"onCreate");
+        mCallbacks = this;
         
         //Setup CursorAdapter and Loader.
-        String[] from = new String[] { Db.TIMESTAMP };
-		int[] to = new int[] {R.id.title};
+        lm = getLoaderManager();
+        lm.initLoader(LOADER_ID, null, mCallbacks);
 		
-		adapter = new ClientAdapter(this, R.layout.sys_status_row, null, from, to, 0);
+        String[] from = new String[] { Db.TIMESTAMP };
+		int[] to = new int[] {R.id.labelTitle};
+		
+		adapter = new NthClientCursorAdapter(this, R.layout.sys_status_row, null, from, to, 0);
 		
 		setListAdapter(adapter);
-		
-		mCallbacks = this;
-		
-		lm = getLoaderManager();
-		lm.initLoader(LOADER_ID, null, mCallbacks);
 		
 		//Initialize intent.
 		serviceIntent = new Intent(this, HobbledUpdater.class);
@@ -104,38 +103,14 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     public void onResume() {
     	super.onResume();
     	
-    	Log.d(TAG,"onResume, listening for updates");
+    	Log.d(TAG,"onResume");
     	
-    	//Listen for updates.
-    	lm.restartLoader(LOADER_ID, null, mCallbacks);
-		
-		contentObserver = new ContentObserver(new Handler()) {
-			@Override
-			public void onChange(boolean selfChange)
-			{
-				//Notify adapter that something has changed.
-				if (adapter != null) {
-					Log.d(TAG,"db change, notifying adapter");
-					adapter.notifyDataSetChanged();
-				}
-			}
-			
-			@Override
-			public boolean deliverSelfNotifications() {
-				return true;
-			}
-		};
-		
-		getContentResolver().registerContentObserver(Db.DATA_URI, true, contentObserver);
     }
     
     @Override
     public void onPause() {
     	
-    	Log.d(TAG,"onPause, unregistering for updates");
-    	
-    	//Stop listening for updates.
-    	getContentResolver().unregisterContentObserver(contentObserver);
+    	Log.d(TAG,"onPause");
     	
     	super.onPause();
     }
@@ -176,15 +151,15 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		String[] projection = { Db._ID, Db.TIMESTAMP };
 		
-		CursorLoader cursorLoader = new CursorLoader(this, Db.DATA_URI, projection, null, null, null);
+		CursorLoader cursorLoader = new CursorLoader(this, Db.CLIENT_URI, projection, null, null, null);
 		return cursorLoader;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (loader.getId() == 1 && adapter != null) {
+		if (loader.getId() == LOADER_ID && adapter != null) {
 			adapter.swapCursor(cursor);
-		}	
+		}
 	}
 
 	@Override

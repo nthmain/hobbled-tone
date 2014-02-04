@@ -9,5 +9,5 @@ app.get('/sys_stat/:tstamp', data.sysStatus);
 app.get('/rpi_temp/:tstamp', data.rpiTemp);
 app.get('/rpi_volt/:tstamp', data.rpiVolt);
 
-app.listen(3000)
+app.listen(3000);
 console.log("Server listening on port 3000");
