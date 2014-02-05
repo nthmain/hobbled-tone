@@ -29,10 +29,13 @@ import com.newtonehome.hobbled_tone.service.HobbledUpdater;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.app.Activity;
 import android.app.ListActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.content.CursorLoader;
@@ -46,7 +49,7 @@ import android.app.LoaderManager;
  * NthClient is the top level app for this package. It consists of a top 'action' bar that displays any pertinent system info,
  * 	followed by a listactivity that shows what is being monitored.
  */
-public class NthClient extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class NthClient extends Activity implements LoaderManager.LoaderCallbacks<Cursor> {
 
 	public static final String TAG = "NthClient";
 			
@@ -60,15 +63,17 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.client_main);
+        
+        //For now, just set system status OK
+        	//In future, this will be set on Loader update or content change.
+        ImageView systemStatusIcon = (ImageView)findViewById(R.id.imageViewSystemStatus);
+        systemStatusIcon.setImageResource(android.R.drawable.button_onoff_indicator_on);        
         
         //Make a call to the database helper here to create the database if necessary.
         DbHelper helper = new DbHelper(getApplicationContext());
         helper.getWritableDatabase();
-        
-        //String[] values = new String[] { "Item 1", "Item 2" };
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.list_element_adapter, R.id.listTitle, values);
-        //setListAdapter(new NthAdapter(getApplicationContext(), new ElementDataSource().getElements()));
-        
+
         Log.d(TAG,"onCreate");
         mCallbacks = this;
         
@@ -81,7 +86,18 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
 		
 		adapter = new NthClientCursorAdapter(this, R.layout.sys_status_row, null, from, to, 0);
 		
-		setListAdapter(adapter);
+		final ListView listview = (ListView) findViewById(R.id.listView1);
+		listview.setAdapter(adapter);
+		
+		listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				
+				Log.d(TAG,"list item clicked, opening detail activity");
+			}
+			
+		});
 		
 		//Initialize intent.
 		serviceIntent = new Intent(this, HobbledUpdater.class);
@@ -137,14 +153,6 @@ public class NthClient extends ListActivity implements LoaderManager.LoaderCallb
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.nth_client, menu);
         return true;
-    }
-    
-    @Override
-    public void onListItemClick(ListView list, View view, int pos, long id) {
-    	Log.d(TAG,"item clicked, running asynctask");
-    	
-    	DataAccess getData = new DataAccess();
-    	getData.execute();
     }
 
 	@Override

@@ -37,5 +37,7 @@ THE SOFTWARE.
 	<string name="labelTitle">Title</string>
 	<string name="labelTimestamp">TimeStamp</string>
 	<string name="no_items">Nothing</string>
+	<string name="textViewSystemStatus">System OK</string>
+	<string name="textViewLogMessages">0 Log Messages</string>
 	
 </resources>
